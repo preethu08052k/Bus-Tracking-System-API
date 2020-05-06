@@ -2,8 +2,8 @@ from flask import jsonify
 from flask_restful import Resource,reqparse
 from db import cursor,encode
 
-class Tracking(Resource):
+class Users(Resource):
     def get(self):
-        cursor.execute(f'''SELECT * FROM Rawdata''')
+        cursor.execute(f'''SELECT * FROM Users''')
         result=encode(cursor.fetchall())
         return jsonify(result)

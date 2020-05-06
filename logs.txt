@@ -1,0 +1,15 @@
+Exception on /tracking [GET]
+Traceback (most recent call last):
+  File "C:\ProgramData\Anaconda3\envs\Flaskenv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\ProgramData\Anaconda3\envs\Flaskenv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\ProgramData\Anaconda3\envs\Flaskenv\lib\site-packages\flask_restful\__init__.py", line 468, in wrapper
+    resp = resource(*args, **kwargs)
+  File "C:\ProgramData\Anaconda3\envs\Flaskenv\lib\site-packages\flask\views.py", line 89, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "C:\ProgramData\Anaconda3\envs\Flaskenv\lib\site-packages\flask_restful\__init__.py", line 583, in dispatch_request
+    resp = meth(*args, **kwargs)
+  File "C:\Users\Administrator\Documents\My Programs\Python\Flask\Bus Tracking System API\resources\tracking.py", line 7, in get
+    curso.execute(f'''SELECT * FROM Rawdata''')
+NameError: name 'curso' is not defined
