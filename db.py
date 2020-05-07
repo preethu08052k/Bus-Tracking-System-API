@@ -1,15 +1,21 @@
 import pymysql
 from decimal import Decimal
+from flask import jsonify
 
-connection=pymysql.connect(
-                        host='gpstrackerdb.cgvswcwjh49d.ap-south-1.rds.amazonaws.com',
-                        user='admin',
-                        password='test1234',
-                        db='gpstrackerdb',
-                        cursorclass=pymysql.cursors.DictCursor
-                    )
-
-cursor=connection.cursor()
+def query(querystr,return_json=True):
+    connection=pymysql.connect( host='gpstrackerdb.cgvswcwjh49d.ap-south-1.rds.amazonaws.com',
+                                user='admin',
+                                password='test1234',
+                                db='gpstrackerdb',
+                                cursorclass=pymysql.cursors.DictCursor )
+    connection.begin()
+    cursor=connection.cursor()
+    cursor.execute(querystr)
+    result=encode(cursor.fetchall())
+    cursor.close()
+    connection.close()
+    if return_json: return jsonify(result)
+    return result
 
 def encode(data):
     for row in data:

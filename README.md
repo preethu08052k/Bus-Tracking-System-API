@@ -1,6 +1,6 @@
 Bus Tracking System - 1.2
 -------------------------
-Change Log : added /login. added Authentication using JWT. modified /tracking.
+Change Log : added /login. added Authentication using JWT. modified /tracking. DB error rectified.
 -------------------------
 The Rest API has been deployed to AWS
 .

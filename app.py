@@ -49,4 +49,4 @@ api.add_resource(Users,'/users')
 api.add_resource(UserLogin,'/login')
 
 if __name__ == '__main__':
-    server(app,host='0.0.0.0',port=80)
+    serve(app,host='0.0.0.0',port=80)
