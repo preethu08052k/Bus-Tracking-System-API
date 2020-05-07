@@ -1,6 +1,6 @@
-Bus Tracking System - 1.1
+Bus Tracking System - 1.2
 -------------------------
-using waitress module for WSGI production server.
+Change Log : added /login. added Authentication using JWT. modified /tracking.
 -------------------------
 The Rest API has been deployed to AWS
 .
@@ -8,7 +8,17 @@ Link: ec2-3-7-131-60.ap-south-1.compute.amazonaws.com
 
 Everybody can use the below endpoints to access the tabbles in the database.
 
-/tracking - Rawdata table
+/login - takes a JSON object with username and password and gives back JWT if valid.
+/tracking - takes a JSON object with routeId and deviceTime to give back Tracking data with respect to input.
+		routeId==None and deviceTime==None:
+			returns Livedata of all Buses
+		routeId is not None and deviceTime==None:
+			returns Livedata of given routeId
+		routeId==None and deviceTime is not None:
+			returns Tracking of all Buses at given deviceTime
+		routeId is not None and deviceTime is not None:
+			returns Tracking of given routeId at given deviceTime	
+
 
 /buses - Bus table
 
