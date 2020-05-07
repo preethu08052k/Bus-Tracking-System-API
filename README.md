@@ -9,6 +9,8 @@ Link: ec2-3-7-131-60.ap-south-1.compute.amazonaws.com
 Everybody can use the below endpoints to access the tabbles in the database.
 
 /login - takes a JSON object with username and password and gives back JWT if valid.
+	 The JWT shall be used to access all the end points.
+	 For all the endpoints an Authorization Header should be included with value 'Bearer <JWT>'.
 /tracking - takes a JSON object with routeId and deviceTime to give back Tracking data with respect to input.
 		routeId==None and deviceTime==None:
 			returns Livedata of all Buses
