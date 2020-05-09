@@ -12,6 +12,7 @@ def query(querystr,return_json=True):
     cursor=connection.cursor()
     cursor.execute(querystr)
     result=encode(cursor.fetchall())
+    connection.commit()
     cursor.close()
     connection.close()
     if return_json: return jsonify(result)

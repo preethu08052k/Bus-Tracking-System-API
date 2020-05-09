@@ -2,14 +2,15 @@ import logging
 from flask import Flask,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from waitress import serve
+#from waitress import serve
+from resources.users import Users,UserLogin,UserRegister
 from resources.tracking import Tracking
 from resources.buses import Buses
 from resources.routes import Routes
 from resources.drivers import Drivers
 from resources.sos import Sos
 from resources.alerts import Alerts
-from resources.users import Users,UserLogin
+from resources.sms import SMS
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
@@ -39,6 +40,8 @@ logfile=logging.FileHandler('logs.txt')
 logfile.setLevel(logging.DEBUG)
 app.logger.addHandler(logfile)
 
+api.add_resource(UserRegister,'/register')
+api.add_resource(UserLogin,'/login')
 api.add_resource(Tracking,'/tracking')
 api.add_resource(Buses,'/buses')
 api.add_resource(Routes,'/routes')
@@ -46,7 +49,7 @@ api.add_resource(Drivers,'/drivers')
 api.add_resource(Sos,'/sos')
 api.add_resource(Alerts,'/alerts')
 api.add_resource(Users,'/users')
-api.add_resource(UserLogin,'/login')
+api.add_resource(SMS,'/sms')
 
 if __name__ == '__main__':
-    serve(app,host='0.0.0.0',port=80)
+    app.run(host='127.0.0.1',port=8055,debug=True)
