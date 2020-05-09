@@ -2,7 +2,7 @@ import logging
 from flask import Flask,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-#from waitress import serve
+from waitress import serve
 from resources.users import Users,UserLogin,UserRegister
 from resources.tracking import Tracking
 from resources.buses import Buses
@@ -11,6 +11,7 @@ from resources.drivers import Drivers
 from resources.sos import Sos
 from resources.alerts import Alerts
 from resources.sms import SMS
+from resources.geofence import GeoFence
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
@@ -50,6 +51,7 @@ api.add_resource(Sos,'/sos')
 api.add_resource(Alerts,'/alerts')
 api.add_resource(Users,'/users')
 api.add_resource(SMS,'/sms')
+api.add_resource(GeoFence,'/geofence')
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1',port=8055,debug=True)
+    serve(app,host='0.0.0.0',port=80)
