@@ -1,4 +1,4 @@
-Bus Tracking System - 1.4
+Bus Tracking System API - 1.4
 -------------------------
 Change Log : enabled CORS. added /busgeofence. updated /geofence. 
 -------------------------
