@@ -1,6 +1,6 @@
-Bus Tracking System - 1.3
+Bus Tracking System - 1.4
 -------------------------
-Change Log : added /tracking(POST). added /register. added /messages. added /geofence. modified /tracking(GET).
+Change Log : enabled CORS. added /busgeofence. updated /geofence. 
 -------------------------
 The Rest API has been deployed to AWS
 .
@@ -16,21 +16,23 @@ Everybody can use the below endpoints to access the tabbles in the database.
 /tracking (GET) - takes a JSON object with 'routeId' and 'deviceTime' to give back Livedata with respect to input.
 			routeId==None and deviceTime==None:
 				returns Livedata of all Buses
-			routeId is not None and deviceTime==None:
+			routeId!=None and deviceTime==None:
 				returns Livedata of given routeId
-			routeId is not None and deviceTime is not None:
+			routeId!=None and deviceTime!=None:
 				returns Tracking of given routeId at given deviceTime	
 
 /sms - sends SMS in bulk. takes a JSON object with 'to' and 'message'.
 	if 'to'=='users': given message is sent to all Users.
 	if 'to'=='drivers': given message is sent to all Drivers.
 /geofence (POST) - POST into Geofence table.
-/geofence (GET) - takes a JSON object with 'routeId' and 'gDate'
-			routeId==None and gDate is not None:
-				returns Geofence data of given gDate
-			routeId is not None and deviceTime is not None:
-				returns Geofence data of given routeId and gDate	
+/geofence (GET) - takes a JSON object with 'routeId','fromDate','toDate','status'.
+		  'fromDate' and 'toDate' are must.
+		  if 'routeId' is given, data related only to that 'routeId' is returned else everything is returned.  	
 
+		  if 'status' is given, data with given status only is returned else everything is returned.
+/busgeofence (POST) - POST into BusGeofence table.
+/busgeofence (DELETE) - takes a JSON object with 'routeId' and deletes all the rows from BusGeofence table with the given 'routeId'.
+/busgeofence (GET) - takes a JSON object with 'routeId' and returns a list of latitudes and logitudes detetrmining bus geofence.
 /buses - Bus table
 
 /routes - Routes table

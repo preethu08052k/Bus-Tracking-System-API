@@ -3,6 +3,7 @@ from flask import Flask,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from waitress import serve
+from flask_cors import CORS
 from resources.users import Users,UserLogin,UserRegister
 from resources.tracking import Tracking
 from resources.buses import Buses
@@ -12,13 +13,14 @@ from resources.sos import Sos
 from resources.alerts import Alerts
 from resources.sms import SMS
 from resources.geofence import GeoFence
+from resources.busgeofence import BusGeoFence
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
 app.config['PREFERRED_URL_SCHEME']='https'
 app.config['JWT_SECRET_KEY']='bustrackingsystemapi'
 api = Api(app)
-
+CORS(app)
 jwt = JWTManager(app)
 
 @jwt.unauthorized_loader
@@ -52,6 +54,8 @@ api.add_resource(Alerts,'/alerts')
 api.add_resource(Users,'/users')
 api.add_resource(SMS,'/sms')
 api.add_resource(GeoFence,'/geofence')
+api.add_resource(BusGeoFence,'/busgeofence')
 
 if __name__ == '__main__':
-    serve(app,host='0.0.0.0',port=80)
+    serve(app,host='0.0.0.0',port=80,threads=10)
+    

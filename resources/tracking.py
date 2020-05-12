@@ -47,7 +47,7 @@ class Tracking(Resource):
                                                           AND b.driverId=d.driverId""")
             except:
                 return {"message": "An error occurred while accessing Livedata table."},500
-        elif data['routeId'] is not None and data['deviceTime']==None:
+        elif data['routeId']!=None and data['deviceTime']==None:
             try:
                 return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
                                                     FROM Livedata l, Bus b, Routes r, Driver d
@@ -56,7 +56,7 @@ class Tracking(Resource):
                                                           AND r.routeId={data['routeId']}""")
             except:
                 return {"message": "An error occurred while accessing Livedata table."},500
-        elif data['routeId'] is not None and data['deviceTime'] is not None:
+        elif data['routeId']!=None and data['deviceTime']!=None:
             try:
                 return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
                                                     FROM Rawdata l, Bus b, Routes r, Driver d
