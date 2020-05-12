@@ -33,6 +33,7 @@ Everybody can use the below endpoints to access the tabbles in the database.
 /busgeofence (POST) - POST into BusGeofence table.
 /busgeofence (DELETE) - takes a JSON object with 'routeId' and deletes all the rows from BusGeofence table with the given 'routeId'.
 /busgeofence (GET) - takes a JSON object with 'routeId' and returns a list of latitudes and logitudes detetrmining bus geofence.
+		     if 'routeId' is not given, returns a list of latitudes and logitudes detetrmining bus geofence for all routes.
 /buses - Bus table
 
 /routes - Routes table

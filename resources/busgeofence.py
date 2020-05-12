@@ -34,11 +34,24 @@ class BusGeoFence(Resource):
     @jwt_required
     def get(self):
         parser=reqparse.RequestParser()
-        parser.add_argument('routeId',type=int,required=True,help="routeId cannot be left blank!")
+        parser.add_argument('routeId',type=int)
         data=parser.parse_args()
-        try:
-            result=query(f"""SELECT * FROM BusGeofence WHERE routeId={data['routeId']}""",return_json=False)
-            result=sorted(result,key=lambda x:x['pointNum'])
-            return jsonify([(x['latitude'],x['longitude']) for x in result])
-        except:
-            return {"message" : "An error occurred while accessing BusGeofence table."}, 500
+        if data['routeId']==None:
+            try:
+                routeIds=query(f"""SELECT DISTINCT routeId FROM BusGeofence""",return_json=False)
+                routeIds=[x['routeId'] for x in routeIds]
+                result={}
+                for i in routeIds:
+                    ll=query(f"""SELECT * FROM BusGeofence WHERE routeId={i}""",return_json=False)
+                    ll=sorted(ll,key=lambda x:x['pointNum'])
+                    result[i]=[(x['longitude'],x['latitude']) for x in ll]
+                return jsonify(result)
+            except:
+                return {"message" : "An error occurred while accessing BusGeofence table."}, 500
+        else:
+            try:
+                result=query(f"""SELECT * FROM BusGeofence WHERE routeId={data['routeId']}""",return_json=False)
+                result=sorted(result,key=lambda x:x['pointNum'])
+                return jsonify([(x['longitude'],x['latitude']) for x in result])
+            except:
+                return {"message" : "An error occurred while accessing BusGeofence table."}, 500
