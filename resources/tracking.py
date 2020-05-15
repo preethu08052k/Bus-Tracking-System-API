@@ -7,7 +7,6 @@ class Tracking(Resource):
     @jwt_required
     def post(self):
         parser=reqparse.RequestParser()
-        parser.add_argument('Id',type=int,required=True,help="Id cannot be left blank!")
         parser.add_argument('IMEI',type=str,required=True,help="Vehicle Id cannot be left blank!")
         parser.add_argument('dataframeId',type=int,required=True,help="DataFrame Id cannot be left blank!")
         parser.add_argument('deviceTime',type=str,required=True,help="Record Time cannot be left blank!")
@@ -24,14 +23,15 @@ class Tracking(Resource):
         parser.add_argument('distance',type=str,required=True,help="Vehicle's Distance from CBIT can't be left blank!")
         data=parser.parse_args()
         try:
-            query(f"""INSERT INTO Rawdata VALUES ( {data['Id']},'{data['IMEI']}',{data['dataframeId']},
-                        '{data['deviceTime']}','{data['updatedTime']}',{Decimal(data['latitude'])},
-                        {Decimal(data['longitude'])},{data['speed']},'{data['ignition']}',
-                        {data['fuel']},{data['altitude']},{data['battery']},
-                        {data['runHrs']},{data['alert']},'{data['distance']}')""")
+            query(f"""INSERT INTO Rawdata (IMEI,dataframeId,deviceTime,updatedTime,latitude,longitude,
+                                            speed,ignition,fuel,altitude,battery,runHrs,alert,distance)
+                                  VALUES('{data['IMEI']}',{data['dataframeId']},'{data['deviceTime']}',
+                                        '{data['updatedTime']}',{Decimal(data['latitude'])},{Decimal(data['longitude'])},
+                                        {data['speed']},'{data['ignition']}',{data['fuel']},{data['altitude']},
+                                        {data['battery']},{data['runHrs']},{data['alert']},'{data['distance']}')""")
         except:
             return {"message": "An error occurred while updating."}, 500
-        return data, 201
+        return {"message": "Tracking data posted successfully."}, 201
 
     @jwt_required
     def get(self):

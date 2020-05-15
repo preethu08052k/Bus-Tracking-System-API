@@ -24,7 +24,6 @@ class User():
 class UserRegister(Resource):
     def post(self):
         parser=reqparse.RequestParser()
-        parser.add_argument('Id',type=int,required=True,help="Id cannot be left blank!")
         parser.add_argument('username',type=str,required=True,help="Username cannot be left blank!")
         parser.add_argument('password',type=str,required=True,help="Password cannot be left blank!")
         parser.add_argument('firstName',type=str,required=True,help="Firstname cannot be left blank!")
@@ -37,9 +36,10 @@ class UserRegister(Resource):
         if User.getUserByName(data['username']):
             return {"message": "A user with that username already exists"}, 400
         try:
-            query(f"""INSERT INTO Users VALUES ( {data['Id']},'{data['username']}','{data['password']}',
-                        '{data['firstName']}','{data['lastName']}','{data['phone']}',
-                        '{data['email']}','{data['createdDate']}','{data['updatedDate']}')""")
+            query(f"""INSERT INTO Users(username,password,firstName,lastName,phone,email,createdDate,updatedDate)
+                                  VALUES('{data['username']}','{data['password']}','{data['firstName']}',
+                                        '{data['lastName']}','{data['phone']}','{data['email']}',
+                                        '{data['createdDate']}','{data['updatedDate']}')""")
         except:
             return {"message": "An error occurred while registering."}, 500
         return {"message": "User created successfully."}, 201

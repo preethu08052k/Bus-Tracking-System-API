@@ -18,7 +18,7 @@ class BusGeoFence(Resource):
                                                     {Decimal(data['longitude'])},{data['pointNum']})""")
         except:
             return {"message" : "An error occurred while updating."}, 500
-        return data,201
+        return {"message": "BusGeofence created successfully."},201
 
     @jwt_required
     def delete(self):

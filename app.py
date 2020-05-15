@@ -58,4 +58,3 @@ api.add_resource(BusGeoFence,'/busgeofence')
 
 if __name__ == '__main__':
     serve(app,host='0.0.0.0',port=80,threads=10)
-    

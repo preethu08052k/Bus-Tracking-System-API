@@ -12,10 +12,11 @@ class GeoFence(Resource):
         parser.add_argument('status',type=int,required=True,help="status cannot be left blank!")
         data=parser.parse_args()
         try:
-            query(f"""INSERT INTO Geofence VALUES ( '{data['IMEI']}','{data['gDate']}','{data['gTime']}',{data['status']})""")
+            query(f"""INSERT INTO Geofence(IMEI, gDate, gTime, status)
+                                    VALUES('{data['IMEI']}','{data['gDate']}','{data['gTime']}',{data['status']})""")
         except:
             return {"message" : "An error occurred while updating."}, 500
-        return data,201
+        return {"message": "Geofence status updated successfully."},201
 
     @jwt_required
     def get(self):
