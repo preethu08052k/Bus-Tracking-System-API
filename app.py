@@ -10,10 +10,11 @@ from resources.buses import Buses
 from resources.routes import Routes
 from resources.drivers import Drivers
 from resources.sos import Sos
-from resources.alerts import Alerts
+from resources.alerts import Alerts,AlertsControl
 from resources.sms import SMS
 from resources.geofence import GeoFence
 from resources.busgeofence import BusGeoFence
+from resources.reports import Uptime,Fleet,Alert,Distance
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
@@ -51,10 +52,16 @@ api.add_resource(Routes,'/routes')
 api.add_resource(Drivers,'/drivers')
 api.add_resource(Sos,'/sos')
 api.add_resource(Alerts,'/alerts')
+api.add_resource(AlertsControl,'/alertscontrol')
 api.add_resource(Users,'/users')
 api.add_resource(SMS,'/sms')
 api.add_resource(GeoFence,'/geofence')
 api.add_resource(BusGeoFence,'/busgeofence')
+api.add_resource(Uptime,'/reports/uptime')
+api.add_resource(Fleet,'/reports/fleet')
+api.add_resource(Alert,'/reports/alerts')
+api.add_resource(Distance,'/reports/distance')
 
 if __name__ == '__main__':
-    serve(app,host='0.0.0.0',port=80,threads=10)
+    #serve(app,host='0.0.0.0',port=80,threads=10)
+    app.run(host='127.0.0.1',port=8055,debug=True)
