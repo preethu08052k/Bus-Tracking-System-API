@@ -16,9 +16,9 @@ Everybody can use the below endpoints to access the tables in the database.
 ```
 if 'routeId' == None and 'deviceTime' == None:
 	returns Livedata of all Buses
-if 'routeId' != None and 'deviceTime' == None:
+if 'routeId' != None and 'deviceTime' == None:
 	returns Livedata of given routeId
-if 'routeId' != None and 'deviceTime' != None:
+if 'routeId' != None and 'deviceTime' != None:
 	returns Tracking of given routeId at given deviceTime
 ```
 * _/sms_ - sends SMS in bulk. takes a JSON object with 'to' and 'message'.
