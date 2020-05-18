@@ -2,8 +2,7 @@ Bus Tracking System API - 1.5
 --------------------------------
 Change Log : added _/alertscontrol_(POST,DELETE,GET). added _/reports_.
 --------------------------------
-The Rest API has been deployed to AWS
-.
+The Rest API has been deployed to AWS.
 
 Link: _ec2-3-7-131-60.ap-south-1.compute.amazonaws.com_
 

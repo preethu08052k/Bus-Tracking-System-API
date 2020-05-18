@@ -42,7 +42,7 @@ class BusGeoFence(Resource):
                 routeids=[x['routeId'] for x in routeids]
                 result={}
                 for i in routeids:
-                    ll=query(f"""SELECT longitude,latitude FROM BusGeofence WHERE routeId={i}""",return_json=False)
+                    ll=query(f"""SELECT * FROM BusGeofence WHERE routeId={i}""",return_json=False)
                     ll=sorted(ll,key=lambda x:x['pointNum'])
                     result[i]=[(x['longitude'],x['latitude']) for x in ll]
                 return jsonify(result)
