@@ -63,5 +63,4 @@ api.add_resource(Alert,'/reports/alerts')
 api.add_resource(Distance,'/reports/distance')
 
 if __name__ == '__main__':
-    #serve(app,host='0.0.0.0',port=80,threads=10)
-    app.run(host='127.0.0.1',port=8055,debug=True)
+    serve(app,host='0.0.0.0',port=80,threads=10)
