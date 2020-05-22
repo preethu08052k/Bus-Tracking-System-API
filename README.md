@@ -33,8 +33,8 @@ if 'routeId' != None:
 ```
 if 'routeId' == None:
 	returns a list of BusStops of all Routes.
-	if 'routeId' != None:
-		returns a list of BusStops of given 'routeId'.
+if 'routeId' != None:
+	returns a list of BusStops of given 'routeId'.
 ```
 * _/geofence_ (POST) - POST into Geofence table.
 * _/geofence_ (GET) - takes a JSON object with 'routeId','fromDate','toDate','status'. 'fromDate' and 'toDate' are must.
@@ -56,8 +56,8 @@ if 'status' != None:
 ```
 if 'routeId' == None:
 	returns a list of latitudes and logitudes detetrmining bus geofence of all Routes.
-	if 'routeId' != None:
-		returns a list of latitudes and logitudes detetrmining bus geofence of given 'routeId'.
+if 'routeId' != None:
+	returns a list of latitudes and logitudes detetrmining bus geofence of given 'routeId'.
 ```
 * _/alertscontrol_ (POST) - POST into AlertsControl Table.
 * _/alertscontrol_ (DELETE) - takes a JSON object with 'alertCode' and deletes the AlertControl with the given 'alertCode' if exists.
