@@ -30,15 +30,17 @@ class GeoFence(Resource):
             if  data['routeId']==None:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    												WHERE g.IMEI=b.IMEI AND
-                                                          g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""")
+    								 WHERE g.IMEI=b.IMEI AND
+                                           g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                     ORDER BY gTime""")
                 except:
                     return {"message" : "An error occurred while accessing Geofence table."},500
             else:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    												WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND
-                                                          g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""")
+    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND
+                                           g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                     ORDER BY gTime""")
                 except:
                     return {"message" : "An error occurred while accessing Geofence table."},500
         else:
@@ -46,14 +48,16 @@ class GeoFence(Resource):
             if  data['routeId']==None:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    												WHERE g.IMEI=b.IMEI AND g.status={data['status']} AND
-                                                          g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""")
+    								 WHERE g.IMEI=b.IMEI AND g.status={data['status']} AND
+                                           g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                     ORDER BY gTime""")
                 except:
                     return {"message" : "An error occurred while accessing Geofence table."},500
             else:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    												WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND g.status={data['status']}
-                                                          AND g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""")
+    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND g.status={data['status']}
+                                           AND g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                     ORDER BY gTime""")
                 except:
                     return {"message" : "An error occurred while accessing Geofence table."},500

@@ -17,14 +17,13 @@ class Uptime(Resource):
                 routes=[(x['routeId'],x['IMEI']) for x in routes]
                 result={}
                 for routeid,imei in routes:
-                    runhrs=query(f"""SELECT max(runHrs) AS runHrs,updatedTime AS time
+                    runhrs=query(f"""SELECT IMEI,max(runHrs) AS runHrs,updatedTime AS time
                                      FROM Rawdata
                                      WHERE IMEI='{imei}' AND
                                            deviceTime BETWEEN
                                            '{data['fromDate']}' AND '{data['toDate']}'
-                                     GROUP BY deviceTime""",
-                                 return_json=False)
-                    runhrs=sorted(runhrs,key=lambda x:x['time'])
+                                     GROUP BY deviceTime
+                                     ORDER BY time""",return_json=False)
                     result[routeid]=runhrs
                 return jsonify(result)
             except:
@@ -32,14 +31,13 @@ class Uptime(Resource):
         else:
             try:
                 imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
-                if len(imei)==0: return {"message": "Invalid routeId."}, 400
-                runhrs=query(f"""SELECT max(runHrs) AS runHrs,updatedTime AS time
+                if len(imei)==0: return {"message": "Invalid routeId."}, 404
+                runhrs=query(f"""SELECT IMEI,max(runHrs) AS runHrs,updatedTime AS time
                                  FROM Rawdata
                                  WHERE IMEI='{imei[0]['IMEI']}' AND
                                        deviceTime BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
-                                 GROUP BY deviceTime""",
-                             return_json=False)
-                runhrs=sorted(runhrs,key=lambda x:x['time'])
+                                 GROUP BY deviceTime
+                                 ORDER BY time""",return_json=False)
                 return jsonify(runhrs)
             except:
                 return {"message": "An error occurred collecting report data."}, 500
@@ -61,10 +59,10 @@ class Fleet(Resource):
                     routes=[(x['routeId'],x['IMEI']) for x in routes]
                     result={}
                     for routeid,imei in routes:
-                        fleet=query(f"""SELECT speed,battery,ignition,latitude,longitude,updatedTime AS time
+                        fleet=query(f"""SELECT IMEI,speed,battery,ignition,latitude,longitude,updatedTime AS time
                                         FROM Rawdata WHERE IMEI='{imei}' AND deviceTime BETWEEN
-                                                           '{data['fromDate']}' AND '{data['toDate']}'""",return_json=False)
-                        fleet=sorted(fleet,key=lambda x:x['time'])
+                                                           '{data['fromDate']}' AND '{data['toDate']}'
+                                        ORDER BY time""",return_json=False)
                         result[routeid]=fleet
                     return jsonify(result)
                 except:
@@ -72,11 +70,11 @@ class Fleet(Resource):
             else:
                 try:
                     imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
-                    if len(imei)==0: return {"message": "Invalid routeId."}, 400
-                    fleet=query(f"""SELECT speed,battery,ignition,latitude,longitude,updatedTime AS time
+                    if len(imei)==0: return {"message": "Invalid routeId."}, 404
+                    fleet=query(f"""SELECT IMEI,speed,battery,ignition,latitude,longitude,updatedTime AS time
                                     FROM Rawdata WHERE IMEI='{imei[0]['IMEI']}' AND
-                                         deviceTime BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""",return_json=False)
-                    fleet=sorted(fleet,key=lambda x:x['time'])
+                                         deviceTime BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                    ORDER BY time""",return_json=False)
                     return jsonify(fleet)
                 except:
                     return {"message": "An error occurred collecting report data."}, 500
@@ -87,9 +85,9 @@ class Fleet(Resource):
                     routes=[(x['routeId'],x['IMEI']) for x in routes]
                     result={}
                     for routeid,imei in routes:
-                        fleet=query(f"""SELECT speed,battery,ignition,latitude,longitude,updatedTime AS time
-                                        FROM Rawdata WHERE IMEI='{imei}'""",return_json=False)
-                        fleet=sorted(fleet,key=lambda x:x['time'])
+                        fleet=query(f"""SELECT IMEI,speed,battery,ignition,latitude,longitude,updatedTime AS time
+                                        FROM Rawdata WHERE IMEI='{imei}'
+                                        ORDER BY time""",return_json=False)
                         result[routeid]=fleet
                     return jsonify(result)
                 except:
@@ -97,10 +95,10 @@ class Fleet(Resource):
             else:
                 try:
                     imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
-                    if len(imei)==0: return {"message": "Invalid routeId."}, 400
-                    fleet=query(f"""SELECT speed,battery,ignition,latitude,longitude,updatedTime AS time
-                                    FROM Rawdata WHERE IMEI='{imei[0]['IMEI']}'""",return_json=False)
-                    fleet=sorted(fleet,key=lambda x:x['time'])
+                    if len(imei)==0: return {"message": "Invalid routeId."}, 404
+                    fleet=query(f"""SELECT IMEI,speed,battery,ignition,latitude,longitude,updatedTime AS time
+                                    FROM Rawdata WHERE IMEI='{imei[0]['IMEI']}'
+                                    ORDER BY time""",return_json=False)
                     return jsonify(fleet)
                 except:
                     return {"message": "An error occurred collecting report data."}, 500
@@ -111,26 +109,28 @@ class Alert(Resource):
         parser=reqparse.RequestParser()
         parser.add_argument('fromDate',type=str,required=True,help="fromDate cannot be left blank!")
         parser.add_argument('toDate',type=str,required=True,help="toDate cannot be left blank!")
-        parser.add_argument('alertCode',type=int)
+        parser.add_argument('alertCode',type=str)
         data=parser.parse_args()
         if data['alertCode']==None:
             try:
-                alerts=query(f"""SELECT a.*,ac.description FROM Alerts a,AlertsControl ac
+                alerts=query(f"""SELECT a.alertId,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
+                                 FROM Alerts a,AlertsControl ac
                                  WHERE a.alertCode=ac.alertCode AND
-                                       a.alertDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""",
-                             return_json=False)
-                alerts=sorted(alerts,key=lambda x:x['alertDate'])
+                                       a.alertDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                 ORDER BY a.alertTime""",return_json=False)
                 return jsonify(alerts)
             except:
                 return {"message": "An error occurred collecting report data."}, 500
         else:
             try:
-                alerts=query(f"""SELECT a.*,ac.description FROM Alerts a,AlertsControl ac
+                ac=query(f"""SELECT * FROM AlertsControl WHERE alertCode='{data['alertCode']}'""",return_json=False)
+                if len(ac)==0: return {"message": "Invalid alertCode."}, 404
+                alerts=query(f"""SELECT a.alertId,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
+                                 FROM Alerts a,AlertsControl ac
                                  WHERE a.alertCode=ac.alertCode AND
-                                       a.alertCode={data['alertCode']} AND
-                                       a.alertDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'""",
-                             return_json=False)
-                alerts=sorted(alerts,key=lambda x:x['alertDate'])
+                                       a.alertCode='{data['alertCode']}' AND
+                                       a.alertDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+                                 ORDER BY a.alertTime""",return_json=False)
                 return jsonify(alerts)
             except:
                 return {"message": "An error occurred collecting report data."}, 500
@@ -149,14 +149,13 @@ class Distance(Resource):
                 routes=[(x['routeId'],x['IMEI']) for x in routes]
                 result={}
                 for routeid,imei in routes:
-                    distances=query(f"""SELECT max(distance) AS distance,updatedTime AS time
+                    distances=query(f"""SELECT IMEI,max(distance) AS distance,updatedTime AS time
                                         FROM Rawdata
                                         WHERE IMEI='{imei}' AND
                                               deviceTime BETWEEN
                                               '{data['fromDate']}' AND '{data['toDate']}'
-                                        GROUP BY deviceTime""",
-                                    return_json=False)
-                    distances=sorted(distances,key=lambda x:x['time'])
+                                        GROUP BY deviceTime
+                                        ORDER BY time""",return_json=False)
                     result[routeid]=distances
                 return jsonify(result)
             except:
@@ -164,14 +163,13 @@ class Distance(Resource):
         else:
             try:
                 imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
-                if len(imei)==0: return {"message": "Invalid routeId."}, 400
-                distances=query(f"""SELECT max(distance) AS distance,updatedTime AS time
+                if len(imei)==0: return {"message": "Invalid routeId."}, 404
+                distances=query(f"""SELECT IMEI,max(distance) AS distance,updatedTime AS time
                                     FROM Rawdata
                                     WHERE IMEI='{imei[0]['IMEI']}' AND
                                           deviceTime BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
-                                    GROUP BY deviceTime""",
-                                return_json=False)
-                distances=sorted(distances,key=lambda x:x['time'])
+                                    GROUP BY deviceTime
+                                    ORDER BY time""",return_json=False)
                 return jsonify(distances)
             except:
                 return {"message": "An error occurred collecting report data."}, 500

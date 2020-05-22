@@ -15,6 +15,8 @@ from resources.sms import SMS
 from resources.geofence import GeoFence
 from resources.busgeofence import BusGeoFence
 from resources.reports import Uptime,Fleet,Alert,Distance
+from resources.busstops import BusStops
+from resources.complaints import Complaints
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
@@ -57,10 +59,12 @@ api.add_resource(Users,'/users')
 api.add_resource(SMS,'/sms')
 api.add_resource(GeoFence,'/geofence')
 api.add_resource(BusGeoFence,'/busgeofence')
+api.add_resource(BusStops,'/busstops')
 api.add_resource(Uptime,'/reports/uptime')
 api.add_resource(Fleet,'/reports/fleet')
 api.add_resource(Alert,'/reports/alerts')
 api.add_resource(Distance,'/reports/distance')
+api.add_resource(Complaints,'/complaints')
 
 if __name__ == '__main__':
-    serve(app,host='0.0.0.0',port=80,threads=10)
+    serve(app,host='0.0.0.0',port=80,threads=10,url_scheme='https')

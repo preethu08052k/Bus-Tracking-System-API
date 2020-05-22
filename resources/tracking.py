@@ -42,28 +42,28 @@ class Tracking(Resource):
         if  data['routeId']==None and data['deviceTime']==None:
             try:
                 return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
-                                                    FROM Livedata l, Bus b, Routes r, Driver d
-													WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId
-                                                          AND b.driverId=d.driverId""")
+                                 FROM Livedata l, Bus b, Routes r, Driver d
+						         WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId
+                                       AND b.driverId=d.driverId
+                                 ORDER BY updatedTime""")
             except:
                 return {"message": "An error occurred while accessing Livedata table."},500
         elif data['routeId']!=None and data['deviceTime']==None:
             try:
                 return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
-                                                    FROM Livedata l, Bus b, Routes r, Driver d
-													WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId
-                                                          AND b.driverId=d.driverId
-                                                          AND r.routeId={data['routeId']}""")
+                                 FROM Livedata l, Bus b, Routes r, Driver d
+								 WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId
+                                       AND b.driverId=d.driverId AND r.routeId={data['routeId']}
+                                 ORDER BY updatedTime""")
             except:
                 return {"message": "An error occurred while accessing Livedata table."},500
         elif data['routeId']!=None and data['deviceTime']!=None:
             try:
                 return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
-                                                    FROM Rawdata l, Bus b, Routes r, Driver d
-													WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId
-                                                          AND b.driverId=d.driverId
-                                                          AND r.routeId={data['routeId']}
-                                                          AND l.deviceTime='{data['deviceTime']}'""")
+                                 FROM Rawdata l, Bus b, Routes r, Driver d
+								 WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId AND b.driverId=d.driverId
+                                       AND r.routeId={data['routeId']} AND l.deviceTime='{data['deviceTime']}'
+                                 ORDER BY updatedTime""")
             except:
                 return {"message": "An error occurred while accessing Rawdata table."},500
-        return {"message": "Invalid Input"},400
+        return {"message": "Invalid Input."},400

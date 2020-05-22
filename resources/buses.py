@@ -6,6 +6,6 @@ class Buses(Resource):
     @jwt_required
     def get(self):
         try:
-            return query(f"""SELECT * FROM Bus""")
+            return query(f"""SELECT * FROM Bus ORDER BY routeId""")
         except:
             return {"message": "An error occurred while accessing Bus table."},500

@@ -26,10 +26,12 @@ class BusGeoFence(Resource):
         parser.add_argument('routeId',type=int,required=True,help="routeId cannot be left blank!")
         data=parser.parse_args()
         try:
+            check=query(f"""SELECT * FROM BusGeofence WHERE routeId={data['routeId']}""",return_json=False)
+            if len(check)==0: return {"message" : "BusGeofence for given routeId not found."}, 404
             query(f"""DELETE FROM BusGeofence WHERE routeId={data['routeId']}""")
         except:
             return {"message" : "An error occurred while deleting."}, 500
-        return {"message" : "Deleted successfully."}
+        return {"message" : "Deleted successfully."}, 200
 
     @jwt_required
     def get(self):
@@ -42,16 +44,16 @@ class BusGeoFence(Resource):
                 routeids=[x['routeId'] for x in routeids]
                 result={}
                 for i in routeids:
-                    ll=query(f"""SELECT * FROM BusGeofence WHERE routeId={i}""",return_json=False)
-                    ll=sorted(ll,key=lambda x:x['pointNum'])
+                    ll=query(f"""SELECT longitude,latitude FROM BusGeofence
+                                 WHERE routeId={i} ORDER BY pointNum""",return_json=False)
                     result[i]=[(x['longitude'],x['latitude']) for x in ll]
                 return jsonify(result)
             except:
                 return {"message" : "An error occurred while accessing BusGeofence table."}, 500
         else:
             try:
-                result=query(f"""SELECT * FROM BusGeofence WHERE routeId={data['routeId']}""",return_json=False)
-                result=sorted(result,key=lambda x:x['pointNum'])
+                result=query(f"""SELECT longitude,latitude FROM BusGeofence
+                                 WHERE routeId={data['routeId']} ORDER BY pointNum""",return_json=False)
                 return jsonify([(x['longitude'],x['latitude']) for x in result])
             except:
                 return {"message" : "An error occurred while accessing BusGeofence table."}, 500

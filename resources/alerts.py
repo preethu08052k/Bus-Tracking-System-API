@@ -14,7 +14,7 @@ class Alerts(Resource):
         data=parser.parse_args()
         try:
             imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
-            if len(imei)==0: return {"message":"Invalid routeId!"}, 400
+            if len(imei)==0: return {"message":"Invalid routeId!"}, 404
             query(f"""INSERT INTO Alerts(IMEI,smsStatus,alertDate,alertTime,alertCode)
 	                             VALUES('{imei[0]['IMEI']}',{data['smsStatus']},'{data['alertDate']}',
                                  '{data['alertTime']}','{data['alertCode']}');""")
@@ -33,7 +33,8 @@ class Alerts(Resource):
                 return query(f"""SELECT a.*,ac.description,b.routeId
                                  FROM Alerts a, AlertsControl ac, Bus b
                                  WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode
-                                       AND a.alertDate='{data['alertDate']}'""")
+                                       AND a.alertDate='{data['alertDate']}'
+                                 ORDER BY a.alertTime""")
             except:
                 return {"message": "An error occurred while accessing Alerts table."},500
         else:
@@ -42,7 +43,8 @@ class Alerts(Resource):
                                  FROM Alerts a, AlertsControl ac, Bus b
                                  WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode
                                        AND b.routeId={data['routeId']}
-                                       AND a.alertDate='{data['alertDate']}'""")
+                                       AND a.alertDate='{data['alertDate']}'
+                                 ORDER BY a.alertTime""")
             except:
                 return {"message": "An error occurred while accessing Alerts table."},500
 
@@ -50,7 +52,7 @@ class AlertsControl(Resource):
     @jwt_required
     def post(self):
         parser=reqparse.RequestParser()
-        parser.add_argument('alertCode',type=int,required=True,help="alertCode cannot be left blank!")
+        parser.add_argument('alertCode',type=str,required=True,help="alertCode cannot be left blank!")
         parser.add_argument('alertInterval',type=int,required=True,help="alertInterval cannot be left blank!")
         parser.add_argument('maxAlerts',type=int,required=True,help="maxAlerts cannot be left blank!")
         parser.add_argument('description',type=str,required=True,help="description cannot be left blank!")
@@ -67,14 +69,16 @@ class AlertsControl(Resource):
         parser.add_argument('alertCode',type=str,required=True,help="alertCode cannot be left blank!")
         data=parser.parse_args()
         try:
+            check=query(f"""SELECT * FROM AlertsControl WHERE alertCode='{data['alertCode']}'""",return_json=False)
+            if len(check)==0: return {"message" : "No such AlertControl found."}, 404
             query(f"""DELETE FROM AlertsControl WHERE alertCode='{data['alertCode']}'""")
         except:
             return {"message" : "An error occurred while deleting."}, 500
-        return {"message" : "Deleted successfully."}
+        return {"message" : "Deleted successfully."}, 200
 
     @jwt_required
     def get(self):
         try:
-            return query(f"""SELECT * FROM AlertsControl""")
+            return query(f"""SELECT * FROM AlertsControl ORDER BY alertCode""")
         except:
             return {"message": "An error occurred while accessing AlertsControl table."},500
