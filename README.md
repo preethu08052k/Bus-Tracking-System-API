@@ -1,6 +1,6 @@
 Bus Tracking System API - 1.6
 --------------------------------
-Change Log : added _/busstops_. added _/complaints_. changed timezone to IST. updated _/routes_. updated _/reports_.
+Change Log : added _/busstops_(POST,DELETE,GET). added _/complaints_(POST,GET). changed timezone to IST. updated _/routes_. updated _/reports_.
 --------------------------------
 The Rest API has been deployed to AWS.
 
