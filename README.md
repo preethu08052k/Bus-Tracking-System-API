@@ -28,7 +28,7 @@ if 'routeId' != None:
 	returns Route Information of given 'routeId'
 ```
 * _/busstops_ (POST) - POST into BusStops table.
-* _/busstops_ (DELETE) - takes a JSON object with 'routeId' and 'busStopName' and deletes given BusStop if exists.
+* _/busstops_ (DELETE) - takes a JSON object with 'routeId' and 'busStopNum' and deletes given BusStop if exists.
 * _/busstops_ (GET) - takes a JSON object with 'routeId'.
 ```
 if 'routeId' == None:
