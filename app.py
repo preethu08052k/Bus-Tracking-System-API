@@ -4,6 +4,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from waitress import serve
 from flask_cors import CORS
+from db import query
 from resources.users import Users,UserLogin,UserRegister
 from resources.tracking import Tracking
 from resources.buses import Buses
@@ -14,7 +15,7 @@ from resources.alerts import Alerts,AlertsControl
 from resources.sms import SMS
 from resources.geofence import GeoFence
 from resources.busgeofence import BusGeoFence
-from resources.reports import Uptime,Fleet,Alert,Distance
+from resources.reports import Fleet,Alert
 from resources.busstops import BusStops
 from resources.complaints import Complaints
 
@@ -25,6 +26,13 @@ app.config['JWT_SECRET_KEY']='bustrackingsystemapi'
 api = Api(app)
 CORS(app)
 jwt = JWTManager(app)
+
+@jwt.user_claims_loader
+def add_claims_to_access_token(identity):
+    return {
+                'userid':identity,
+                'vendorid':query(f"""SELECT vendorId FROM Users WHERE Id={identity}""",return_json=False)[0]['vendorId']
+           }
 
 @jwt.unauthorized_loader
 def missing_token_callback(error):
@@ -60,10 +68,8 @@ api.add_resource(SMS,'/sms')
 api.add_resource(GeoFence,'/geofence')
 api.add_resource(BusGeoFence,'/busgeofence')
 api.add_resource(BusStops,'/busstops')
-api.add_resource(Uptime,'/reports/uptime')
 api.add_resource(Fleet,'/reports/fleet')
 api.add_resource(Alert,'/reports/alerts')
-api.add_resource(Distance,'/reports/distance')
 api.add_resource(Complaints,'/complaints')
 
 if __name__ == '__main__':

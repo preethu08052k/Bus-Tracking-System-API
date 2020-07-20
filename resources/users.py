@@ -15,12 +15,6 @@ class User():
         if len(result)>0: return User(result[0]['Id'],result[0]['username'],result[0]['password'])
         return None
 
-    @classmethod
-    def getUserById(cls,id):
-        result=query(f"""SELECT Id,username,password FROM Users WHERE Id='{id}'""",return_json=False)
-        if len(result)>0: return User(result[0]['Id'],result[0]['username'],result[0]['password'])
-        return None
-
 class UserRegister(Resource):
     def post(self):
         parser=reqparse.RequestParser()
@@ -32,14 +26,16 @@ class UserRegister(Resource):
         parser.add_argument('email',type=str,required=True,help="Email can't be left blank!")
         parser.add_argument('createdDate',type=str,required=True,help="Created Date can't be left blank!")
         parser.add_argument('updatedDate',type=str,required=True,help="Updated Date can't be left blank!")
+        parser.add_argument('vendorId',type=int,required=True,help="vendorId can't be left blank!")
+
         data=parser.parse_args()
         if User.getUserByName(data['username']):
             return {"message": "A user with that username already exists"}, 400
         try:
-            query(f"""INSERT INTO Users(username,password,firstName,lastName,phone,email,createdDate,updatedDate)
+            query(f"""INSERT INTO Users(username,password,firstName,lastName,phone,email,createdDate,updatedDate,vendorId)
                                   VALUES('{data['username']}','{data['password']}','{data['firstName']}',
                                         '{data['lastName']}','{data['phone']}','{data['email']}',
-                                        '{data['createdDate']}','{data['updatedDate']}')""")
+                                        '{data['createdDate']}','{data['updatedDate']}',{data['vendorId']})""")
         except:
             return {"message": "An error occurred while registering."}, 500
         return {"message": "User created successfully."}, 201
