@@ -1,10 +1,11 @@
 from flask_restful import Resource,reqparse
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required,get_jwt_claims
 from db import query
 
 class GeoFence(Resource):
     @jwt_required
     def post(self):
+        vendorid=get_jwt_claims()['vendorid']
         parser=reqparse.RequestParser()
         parser.add_argument('IMEI',type=str,required=True,help="IMEI cannot be left blank!")
         parser.add_argument('gDate',type=str,required=True,help="Date cannot be left blank!")
@@ -12,6 +13,8 @@ class GeoFence(Resource):
         parser.add_argument('status',type=int,required=True,help="status cannot be left blank!")
         data=parser.parse_args()
         try:
+            imei=query(f"""SELECT IMEI FROM Bus WHERE IMEI={data['IMEI']} AND vendorId={vendorid}""",return_json=False)
+            if len(imei)==0: return {"message":"Invalid IMEI!"}, 404
             query(f"""INSERT INTO Geofence(IMEI, gDate, gTime, status)
                                     VALUES('{data['IMEI']}','{data['gDate']}','{data['gTime']}',{data['status']})""")
         except:
@@ -20,6 +23,7 @@ class GeoFence(Resource):
 
     @jwt_required
     def get(self):
+        vendorid=get_jwt_claims()['vendorid']
         parser=reqparse.RequestParser()
         parser.add_argument('fromDate',type=str,required=True,help="Date cannot be left blank!")
         parser.add_argument('toDate',type=str,required=True,help="Date cannot be left blank!")
@@ -30,7 +34,7 @@ class GeoFence(Resource):
             if  data['routeId']==None:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    								 WHERE g.IMEI=b.IMEI AND
+    								 WHERE g.IMEI=b.IMEI AND b.vendorId={vendorid} AND
                                            g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
                                      ORDER BY gTime""")
                 except:
@@ -38,7 +42,7 @@ class GeoFence(Resource):
             else:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND
+    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND b.vendorId={vendorid} AND
                                            g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
                                      ORDER BY gTime""")
                 except:
@@ -48,7 +52,7 @@ class GeoFence(Resource):
             if  data['routeId']==None:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    								 WHERE g.IMEI=b.IMEI AND g.status={data['status']} AND
+    								 WHERE g.IMEI=b.IMEI AND g.status={data['status']} AND b.vendorId={vendorid} AND
                                            g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
                                      ORDER BY gTime""")
                 except:
@@ -56,8 +60,9 @@ class GeoFence(Resource):
             else:
                 try:
                     return query(f"""SELECT g.*,b.routeId FROM Geofence g, Bus b
-    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND g.status={data['status']}
-                                           AND g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
+    								 WHERE g.IMEI=b.IMEI AND b.routeId={data['routeId']} AND
+                                           g.status={data['status']} AND b.vendorId={vendorid} AND
+                                           g.gDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
                                      ORDER BY gTime""")
                 except:
                     return {"message" : "An error occurred while accessing Geofence table."},500

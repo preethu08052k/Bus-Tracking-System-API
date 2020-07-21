@@ -1,10 +1,11 @@
 from flask_restful import Resource,reqparse
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required,get_jwt_claims
 from db import query
 
 class Alerts(Resource):
     @jwt_required
     def post(self):
+        vendorid=get_jwt_claims()['vendorid']
         parser=reqparse.RequestParser()
         parser.add_argument('routeId',type=int,required=True,help="routeId cannot be left blank!")
         parser.add_argument('smsStatus',type=int,required=True,help="smsStatus cannot be left blank!")
@@ -13,7 +14,7 @@ class Alerts(Resource):
         parser.add_argument('alertCode',type=str,required=True,help="alertCode cannot be left blank!")
         data=parser.parse_args()
         try:
-            imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']}""",return_json=False)
+            imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']} AND vendorId={vendorid}""",return_json=False)
             if len(imei)==0: return {"message":"Invalid routeId!"}, 404
             query(f"""INSERT INTO Alerts(IMEI,smsStatus,alertDate,alertTime,alertCode)
 	                             VALUES('{imei[0]['IMEI']}',{data['smsStatus']},'{data['alertDate']}',
@@ -24,6 +25,7 @@ class Alerts(Resource):
 
     @jwt_required
     def get(self):
+        vendorid=get_jwt_claims()['vendorid']
         parser=reqparse.RequestParser()
         parser.add_argument('routeId',type=int)
         parser.add_argument('alertDate',type=str,required=True,help="Date cannot be left blank!")
@@ -32,8 +34,8 @@ class Alerts(Resource):
             try:
                 return query(f"""SELECT a.*,ac.description,b.routeId
                                  FROM Alerts a, AlertsControl ac, Bus b
-                                 WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode
-                                       AND a.alertDate='{data['alertDate']}'
+                                 WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode AND
+                                       a.alertDate='{data['alertDate']}' AND b.vendorId={vendorid}
                                  ORDER BY a.alertTime""")
             except:
                 return {"message": "An error occurred while accessing Alerts table."},500
@@ -41,8 +43,8 @@ class Alerts(Resource):
             try:
                 return query(f"""SELECT a.*,ac.description,b.routeId
                                  FROM Alerts a, AlertsControl ac, Bus b
-                                 WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode
-                                       AND b.routeId={data['routeId']}
+                                 WHERE a.IMEI=b.IMEI AND a.alertCode=ac.alertCode AND
+                                       b.routeId={data['routeId']} AND b.vendorId={vendorid}
                                        AND a.alertDate='{data['alertDate']}'
                                  ORDER BY a.alertTime""")
             except:

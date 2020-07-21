@@ -1,10 +1,10 @@
 Bus Tracking System API - 1.7
 --------------------------------
-Change Log : Using **tracker** and **tracker_latest** tables instead of **Rawdata** and **Livedata** tables. Storing **vendorId** in JWT to distinguish between different tenants. Updated _/tracking_. Updated _/reports_.
+Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated all endpoints.
 --------------------------------
 The Rest API has been deployed to AWS.
 
-Link: _ec2-3-7-131-60.ap-south-1.compute.amazonaws.com_
+Link: _ec2-13-233-193-38.ap-south-1.compute.amazonaws.com_
 
 Everybody can use the below endpoints to access the tables in the database.
 
@@ -111,6 +111,6 @@ if 'to' == 'drivers':
 * _/sos_ - Sos table.
 * _/users_ - Users table.
 
-Example: _ec2-3-7-131-60.ap-south-1.compute.amazonaws.com/routes_
+Example: _http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes_
 
 All the endpoints returns the data as a list of dictionaries in JSON format which can be converted and used in the program directly.
