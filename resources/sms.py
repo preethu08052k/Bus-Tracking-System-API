@@ -46,4 +46,17 @@ class SMS(Resource):
                 return post("http://api.msg91.com/api/v2/sendsms", headers=headers,data=payload).json()
             except:
                 return {"message":"There was an error sending messages"},500
+        elif data['to']=='krishna':
+            #phoneNumbers=query("""SELECT phone FROM Users WHERE username='krishna'""",return_json=False)
+            phoneNumbers=[{'phone':'9110319657'}]
+            for i in phoneNumbers:
+                payload+=('''"''' )+str(i['phone'])+('''"''')+(",")
+            payload=payload[:-1]
+            payload=payload+("""        ]
+                                    }
+                                ]}""")
+            try:
+                return post("http://api.msg91.com/api/v2/sendsms", headers=headers,data=payload).json()
+            except:
+                return {"message":"There was an error sending messages"},500
         return {"message":"Invalid input."},400
