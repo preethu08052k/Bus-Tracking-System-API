@@ -6,7 +6,7 @@ from flask import jsonify
 def query(querystr,return_json=True):
     connection=pymysql.connect( host='gpstrackerdb.cgvswcwjh49d.ap-south-1.rds.amazonaws.com',
                                 user='admin',
-                                password='test1234',
+                                password='tracker123',
                                 db='gpstrackerdb',
                                 cursorclass=pymysql.cursors.DictCursor )
     connection.begin()

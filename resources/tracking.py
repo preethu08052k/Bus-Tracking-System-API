@@ -13,7 +13,7 @@ class Tracking(Resource):
         data=parser.parse_args()
         if  data['routeId']==None and data['deviceTime']==None:
             try:
-                return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
+                return query(f"""SELECT l.*,l.upd_datetime as updatedTime,r.*,b.vehicleNo,d.driverId,d.driverName,d.phone as driverPhone
                                  FROM tracker_latest l, Bus b, Routes r, Driver d
 						         WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId AND
                                        b.vendorId={vendorid} AND b.driverId=d.driverId
@@ -22,7 +22,7 @@ class Tracking(Resource):
                 return {"message": "An error occurred while accessing tracker_latest table."},500
         elif data['routeId']!=None and data['deviceTime']==None:
             try:
-                return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
+                return query(f"""SELECT l.*,l.upd_datetime as updatedTime,r.*,b.vehicleNo,d.driverId,d.driverName,d.phone as driverPhone
                                  FROM tracker_latest l, Bus b, Routes r, Driver d
 								 WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId AND b.vendorId={vendorid}
                                        AND b.driverId=d.driverId AND r.routeId={data['routeId']}
@@ -31,7 +31,7 @@ class Tracking(Resource):
                 return {"message": "An error occurred while accessing tracker_latest table."},500
         elif data['routeId']!=None and data['deviceTime']!=None:
             try:
-                return query(f"""SELECT l.*,r.*,d.driverId,d.driverName,d.phone as driverPhone
+                return query(f"""SELECT l.*,l.upd_datetime as updatedTime,r.*,b.vehicleNo,d.driverId,d.driverName,d.phone as driverPhone
                                  FROM tracker l, Bus b, Routes r, Driver d
 								 WHERE l.IMEI=b.IMEI AND b.routeId=r.routeId AND b.driverId=d.driverId
                                        AND b.vendorId={vendorid} AND r.routeId={data['routeId']} AND
