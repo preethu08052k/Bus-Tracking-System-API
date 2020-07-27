@@ -49,7 +49,12 @@ class UserLogin(Resource):
         user=User.getUserByName(data['username'])
         if user and safe_str_cmp(user.password,data['password']):
             access_token=create_access_token(identity=user.id,expires_delta=False)
-            return {'access_token':access_token},200
+            return {
+                    'access_token':access_token,
+                    'vendorName':query(f"""SELECT vendorName FROM Users u, Vendors v
+                                           WHERE u.Id={user.id} AND u.vendorId=v.vendorId
+                                           """,return_json=False)[0]['vendorName']
+                   },200
         return {"message":"Invalid Credentials!"}, 401
 
 class Users(Resource):
