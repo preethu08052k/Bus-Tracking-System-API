@@ -21,7 +21,7 @@ class Fleet(Resource):
                     routes=[(x['routeId'],x['IMEI']) for x in routes]
                     result={}
                     for routeid,imei in routes:
-                        fleet=query(f"""SELECT l.IMEI,speed,battery_volatge,ignition_status,latitude,longitude,upd_datetime
+                        fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,upd_datetime
                                         FROM tracker l, Bus b
                                         WHERE l.IMEI='{imei}' AND  l.IMEI=b.IMEI AND b.vendorId={vendorid} AND
                                               upd_datetime BETWEEN '{data['fromDate']}' AND ADDDATE('{data['toDate']}', INTERVAL 1 DAY)
@@ -34,7 +34,7 @@ class Fleet(Resource):
                 try:
                     imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']} AND vendorId={vendorid}""",return_json=False)
                     if len(imei)==0: return {"message": "Invalid routeId."}, 404
-                    fleet=query(f"""SELECT l.IMEI,speed,battery_volatge,ignition_status,latitude,longitude,upd_datetime
+                    fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,upd_datetime
                                     FROM tracker l, Bus b
                                     WHERE l.IMEI='{imei[0]['IMEI']}' AND  l.IMEI=b.IMEI AND b.vendorId={vendorid} AND
                                           upd_datetime BETWEEN '{data['fromDate']}' AND ADDDATE('{data['toDate']}', INTERVAL 1 DAY)
@@ -49,7 +49,7 @@ class Fleet(Resource):
                     routes=[(x['routeId'],x['IMEI']) for x in routes]
                     result={}
                     for routeid,imei in routes:
-                        fleet=query(f"""SELECT l.IMEI,speed,battery_volatge,ignition_status,latitude,longitude,upd_datetime
+                        fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,upd_datetime
                                         FROM tracker l, Bus b
                                         WHERE l.IMEI='{imei}' AND  l.IMEI=b.IMEI AND b.vendorId={vendorid}
                                         ORDER BY upd_datetime""",return_json=False)
@@ -61,7 +61,7 @@ class Fleet(Resource):
                 try:
                     imei=query(f"""SELECT IMEI FROM Bus WHERE routeId={data['routeId']} AND vendorId={vendorid}""",return_json=False)
                     if len(imei)==0: return {"message": "Invalid routeId."}, 404
-                    fleet=query(f"""SELECT l.IMEI,speed,battery_volatge,ignition_status,latitude,longitude,upd_datetime
+                    fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,upd_datetime
                                     FROM tracker l, Bus b
                                     WHERE l.IMEI='{imei[0]['IMEI']}' AND  l.IMEI=b.IMEI AND b.vendorId={vendorid}
                                     ORDER BY upd_datetime""",return_json=False)

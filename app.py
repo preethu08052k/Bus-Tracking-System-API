@@ -73,4 +73,4 @@ api.add_resource(Alert,'/reports/alerts')
 api.add_resource(Complaints,'/complaints')
 
 if __name__ == '__main__':
-    serve(app,host='0.0.0.0',port=80,threads=10,url_scheme='https')
+    serve(app,host='0.0.0.0',port=80,threads=100,url_scheme='https')
