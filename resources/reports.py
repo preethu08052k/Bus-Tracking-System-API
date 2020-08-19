@@ -80,7 +80,7 @@ class Alert(Resource):
         data=parser.parse_args()
         if data['alertCode']==None:
             try:
-                alerts=query(f"""SELECT a.alertId,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
+                alerts=query(f"""SELECT a.alertCode,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
                                  FROM Alerts a,AlertsControl ac, Bus b
                                  WHERE a.alertCode=ac.alertCode AND a.IMEI=b.IMEI AND b.vendorId={vendorid} AND
                                        a.alertDate BETWEEN '{data['fromDate']}' AND '{data['toDate']}'
@@ -92,7 +92,7 @@ class Alert(Resource):
             try:
                 ac=query(f"""SELECT * FROM AlertsControl WHERE alertCode='{data['alertCode']}'""",return_json=False)
                 if len(ac)==0: return {"message": "Invalid alertCode."}, 404
-                alerts=query(f"""SELECT a.alertId,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
+                alerts=query(f"""SELECT a.alertCode,a.IMEI,a.smsStatus,a.alertTime,a.alertCode,ac.description
                                  FROM Alerts a,AlertsControl ac, Bus b
                                  WHERE a.alertCode=ac.alertCode AND a.IMEI=b.IMEI AND
                                        a.alertCode='{data['alertCode']}' AND b.vendorId={vendorid} AND

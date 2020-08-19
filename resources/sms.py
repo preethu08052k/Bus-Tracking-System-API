@@ -47,8 +47,8 @@ class SMS(Resource):
             except:
                 return {"message":"There was an error sending messages"},500
         elif data['to']=='krishna':
-            #phoneNumbers=query("""SELECT phone FROM Users WHERE username='krishna'""",return_json=False)
-            phoneNumbers=[{'phone':'9110319657'}]
+            phoneNumbers=query("""SELECT phone FROM users WHERE username='krishna'""",return_json=False)
+            #phoneNumbers=[{'phone':'9110319657'}]
             for i in phoneNumbers:
                 payload+=('''"''' )+str(i['phone'])+('''"''')+(",")
             payload=payload[:-1]
