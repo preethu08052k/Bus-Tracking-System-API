@@ -21,7 +21,8 @@ class Fleet(Resource):
                     routes=[(x['routeId'],x['IMEI']) for x in routes]
                     result={}
                     for routeid,imei in routes:
-                        fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,upd_datetime
+                        fleet=query(f"""SELECT l.IMEI,speed,battery_voltage,ignition_status,latitude,longitude,ac,
+                                               mains_voltage,mains_power,alert_id,sos_alert,upd_datetime
                                         FROM tracker l, Bus b
                                         WHERE l.IMEI='{imei}' AND  l.IMEI=b.IMEI AND b.vendorId={vendorid} AND
                                               upd_datetime BETWEEN '{data['fromDate']}' AND ADDDATE('{data['toDate']}', INTERVAL 1 DAY)
