@@ -1,6 +1,6 @@
 Bus Tracking System API - 1.7
 --------------------------------
-Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated all endpoints.
+Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/buses_ and _/drivers_ for CRUD operations. Updated all endpoints.
 --------------------------------
 The Rest API has been deployed to AWS.
 
@@ -13,18 +13,18 @@ Everybody can use the below endpoints to access the tables in the database.
 * _/tracking_ (GET) - takes a JSON object with 'routeId' and 'deviceTime' and sends back Livedata with respect to input.
 ```
 if 'routeId' == None and 'deviceTime' == None:
-	returns Livedata of all Routes
+	returns Livedata of all Routes.
 if 'routeId' != None and 'deviceTime' == None:
-	returns Livedata of given 'routeId'
+	returns Livedata of given 'routeId'.
 if 'routeId' != None and 'deviceTime' != None:
-	returns Tracking of given 'routeId' at given 'deviceTime'
+	returns Tracking of given 'routeId' at given 'deviceTime'.
 ```
 * _/routes_ - takes a JSON object with 'routeId' and sends back Information about the routes.
 ```
 if 'routeId' == None:
-	returns Route Information of all Routes
+	returns Route Information of all Routes.
 if 'routeId' != None:
-	returns Route Information of given 'routeId'
+	returns Route Information of given 'routeId'.
 ```
 * _/busstops_ (POST) - POST into BusStops table.
 * _/busstops_ (DELETE) - takes a JSON object with 'routeId' and 'busStopNum' and deletes given BusStop if exists.
@@ -40,14 +40,14 @@ if 'routeId' != None:
 ```
 if 'status' == None:
 	if 'routeId' == None:
-		returns all geofence data of all Routes
+		returns all geofence data of all Routes.
 	if 'routeId' != None:
-		returns all geofence data of given 'routeId'
+		returns all geofence data of given 'routeId'.
 if 'status' != None:
 	if 'routeId' == None:
-		returns geofence data of all Routes with given 'status'
+		returns geofence data of all Routes with given 'status'.
 	if 'routeId' != None:
-		returns geofence data of given 'routeId' with given 'status'
+		returns geofence data of given 'routeId' with given 'status'.
 ```
 * _/busgeofence_ (POST) - POST into BusGeofence table.
 * _/busgeofence_ (DELETE) - takes a JSON object with 'routeId' and deletes all the rows from BusGeofence table with the given 'routeId' if exists.
@@ -73,31 +73,31 @@ if 'routeId' != None:
 ```
 if 'fromDate' and 'toDate' == None:
 	if 'routeId' == None:
-		returns all fleet data of all buses
+		returns all fleet data of all buses.
 	if 'routeId' != None:
-		returns all fleet data of given 'routeId'
+		returns all fleet data of given 'routeId'.
 if 'fromDate' and 'toDate' != None:
 	if 'routeId' == None:
-		returns fleet data of all buses between given dates
+		returns fleet data of all buses between given dates.
 	if 'routeId' != None:
-		returns fleet data of given 'routeId' between given dates
+		returns fleet data of given 'routeId' between given dates.
 ```
 * _/reports/alerts_ - takes a JSON object with 'alertCode', 'fromDate', 'toDate'. 'fromDate', 'toDate' are must.
 ```
 if 'alertCode' == None:
-	returns all alerts buses between given dates
+	returns all alerts buses between given dates.
 if 'alertCode' != None:
-	returns all alerts of given type between given dates
+	returns all alerts of given type between given dates.
 ```
-* _/complaints_ (POST)- POST into Complaints Table.
-* _/complaints_ (GET)- takes a JSON object with 'cFrom', 'cDate' and returns a list of Complaints. 'cDate' is must.
+* _/complaints_ (POST) - POST into Complaints Table.
+* _/complaints_ (GET) - takes a JSON object with 'cFrom', 'cDate' and returns a list of Complaints. 'cDate' is must.
 ```
 if 'cFrom' == None:
-	returns a list of all Complaints on given cDate
+	returns a list of all Complaints on given cDate.
 if 'cFrom' == 'staff':
-	returns a list of Complaints on given cDate given by staff
+	returns a list of Complaints on given cDate given by staff.
 if 'cFrom' == 'student':
-	returns a list of Complaints on given cDate given by students
+	returns a list of Complaints on given cDate given by students.
 ```
 * _/sms_ - sends SMS in bulk. takes a JSON object with 'to' and 'message'.
 ```
@@ -106,8 +106,25 @@ if 'to' == 'users':
 if 'to' == 'drivers':
 	given message is sent to all Drivers.
 ```
-* _/buses_ - Bus table.
-* _/drivers_ - Driver table.
+* _/buses_ (POST)- Post into Bus table.
+* _/buses_ (PUT)- Update an entry in Bus table.
+* _/buses_ (GET)- takes a JSON object with 'routeId'.
+```
+if 'routeId' == None:
+	returns information of all Buses.
+if 'routeId' != None:
+	returns information of Bus with given 'routeId'.
+```
+* _/buses_ (DELETE)- takes a JSON object with 'routeId' and deletes Bus with that 'routeId' if exists.
+* _/drivers_ (POST)- Post into Driver table.
+* _/drivers_ (GET)- takes a JSON object with 'driverId'.
+```
+if 'driverId' == None:
+	returns information of all Drivers.
+if 'driverId' != None:
+	returns information of Driver with given 'driverId'.
+```
+* _/drivers_ (DELETE)- takes a JSON object with 'driverId' and deletes Driver with that 'driverId' if exists.
 * _/sos_ - Sos table.
 * _/users_ - Users table.
 
