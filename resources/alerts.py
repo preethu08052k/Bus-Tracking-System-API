@@ -60,10 +60,30 @@ class AlertsControl(Resource):
         parser.add_argument('description',type=str,required=True,help="description cannot be left blank!")
         data=parser.parse_args()
         try:
+            check=query(f"""SELECT alertCode FROM AlertsControl WHERE alertCode='{data['alertCode']}'""",return_json=False)
+            if len(check)>0: return {"message":"AlertCode already exists!"}, 400
             query(f"""INSERT INTO AlertsControl VALUES('{data['alertCode']}',{data['alertInterval']},{data['maxAlerts']},'{data['description']}')""")
         except:
-            return {"message": "An error occurred while updating."}, 500
+            return {"message": "An error occurred while creating."}, 500
         return {"message": "AlertControl created successfully."}, 201
+
+    @jwt_required
+    def put(self):
+        parser=reqparse.RequestParser()
+        parser.add_argument('alertCode',type=str,required=True,help="alertCode cannot be left blank!")
+        parser.add_argument('alertInterval',type=int,required=True,help="alertInterval cannot be left blank!")
+        parser.add_argument('maxAlerts',type=int,required=True,help="maxAlerts cannot be left blank!")
+        parser.add_argument('description',type=str,required=True,help="description cannot be left blank!")
+        data=parser.parse_args()
+        try:
+            check=query(f"""SELECT alertCode FROM AlertsControl WHERE alertCode='{data['alertCode']}'""",return_json=False)
+            if len(check)==0: return {"message":"AlertCode doesn't exist!"}, 400
+            query(f"""UPDATE AlertsControl SET alertInterval={data['alertInterval']},maxAlerts={data['maxAlerts']},
+                                               description='{data['description']}'
+                                           WHERE alertCode='{data['alertCode']}'""")
+        except:
+            return {"message": "An error occurred while updating."}, 500
+        return {"message": "AlertControl updated successfully."}, 201
 
     @jwt_required
     def delete(self):
@@ -80,7 +100,16 @@ class AlertsControl(Resource):
 
     @jwt_required
     def get(self):
-        try:
-            return query(f"""SELECT * FROM AlertsControl ORDER BY alertCode""")
-        except:
-            return {"message": "An error occurred while accessing AlertsControl table."},500
+        parser=reqparse.RequestParser()
+        parser.add_argument('alertCode',type=int)
+        data=parser.parse_args()
+        if data['alertCode']==None:
+            try:
+                return query(f"""SELECT * FROM AlertsControl ORDER BY alertCode""")
+            except:
+                return {"message": "An error occurred while accessing AlertsControl table."},500
+        else:
+            try:
+                return query(f"""SELECT * FROM AlertsControl WHERE alertCode={data['alertCode']} ORDER BY alertCode""")
+            except:
+                return {"message": "An error occurred while accessing AlertsControl table."},500

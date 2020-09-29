@@ -10,14 +10,30 @@ class Drivers(Resource):
         parser.add_argument('Phone',type=str,required=True,help="Phone cannot be left blank!")
         data=parser.parse_args()
         try:
-            imei=query(f"""SELECT driverId FROM Driver WHERE driverName='{data['driverName']}' AND
+            check=query(f"""SELECT driverId FROM Driver WHERE driverName='{data['driverName']}' AND
                                                              Phone='{data['Phone']}'""",return_json=False)
-            if len(imei)>0: return {"message":"Driver already exists!"}, 400
+            if len(check)>0: return {"message":"Driver already exists!"}, 400
             query(f"""INSERT INTO Driver(driverName,Phone)
                                   VALUES('{data['driverName']}','{data['Phone']}')""")
         except:
            return {"message": "An error occurred while creating."}, 500
         return {"message": "Driver created successfully."}, 201
+
+    @jwt_required
+    def put(self):
+        parser=reqparse.RequestParser()
+        parser.add_argument('driverId',type=int,required=True,help="driverId cannot be left blank!")
+        parser.add_argument('driverName',type=str,required=True,help="driverName cannot be left blank!")
+        parser.add_argument('Phone',type=str,required=True,help="Phone cannot be left blank!")
+        data=parser.parse_args()
+        try:
+            check=query(f"""SELECT driverId FROM Driver WHERE driverId='{data['driverId']}'""",return_json=False)
+            if len(check)==0: return {"message":"Driver doesn't exist!"}, 400
+            query(f"""UPDATE Driver SET driverName='{data['driverName']}',Phone='{data['Phone']}'
+                                    WHERE driverId={data['driverId']}""")
+        except:
+           return {"message": "An error occurred while updating."}, 500
+        return {"message": "Driver updated successfully."}, 201
 
     @jwt_required
     def get(self):

@@ -1,6 +1,6 @@
 Bus Tracking System API - 1.7
 --------------------------------
-Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/buses_ and _/drivers_ for CRUD operations. Updated all endpoints.
+Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/users_,_/alertscontrol_,_/buses_,_/drivers_ for CRUD operations. Updated all endpoints.
 --------------------------------
 The Rest API has been deployed to AWS.
 
@@ -9,6 +9,15 @@ Link: _ec2-13-233-193-38.ap-south-1.compute.amazonaws.com_
 Everybody can use the below endpoints to access the tables in the database.
 
 * _/register_ - POST into Users table.
+* _/users_ (PUT) - Updates an entry in Users table.
+* _/users_ (GET) - takes a JSON object with 'Id' and sends back information about the User.
+```
+if 'Id' == None:
+	returns all Users Information.
+if 'Id' != None:
+	returns User Information of given 'Id'.
+```
+* _/users_ (DELETE) - takes a JSON object with 'Id' and deletes given User if exists.
 * _/login_ - takes a JSON object with 'username' and 'password' and gives back JWT if exists in Users table. The JWT shall be used to access all the end points. For all the endpoints an Authorization Header should be included with value 'Bearer <JWT>'.
 * _/tracking_ (GET) - takes a JSON object with 'routeId' and 'deviceTime' and sends back Livedata with respect to input.
 ```
@@ -59,8 +68,15 @@ if 'routeId' != None:
 	returns a list of latitudes and logitudes detetrmining bus geofence of given 'routeId'.
 ```
 * _/alertscontrol_ (POST) - POST into AlertsControl Table.
+* _/alertscontrol_ (PUT) - Update an entry in AlertsControl Table.
 * _/alertscontrol_ (DELETE) - takes a JSON object with 'alertCode' and deletes the AlertControl with the given 'alertCode' if exists.
-* _/alertscontrol_ (GET) - AlertsControl Table.
+* _/alertscontrol_ (GET) - takes a JSON object with 'alertCode' and sends back information about Alert.
+```
+if 'alertCode' == None:
+	returns information about all AlertControls.
+if 'alertCode' != None:
+	returns information about AlertControl with given alertCode.
+```
 * _/alerts_ (POST) - POST into Alerts table.
 * _/alerts_ (GET) - takes a JSON object with 'routeId' and 'alertDate'. 'alertDate' is must.
 ```
@@ -108,7 +124,7 @@ if 'to' == 'drivers':
 ```
 * _/buses_ (POST)- Post into Bus table.
 * _/buses_ (PUT)- Update an entry in Bus table.
-* _/buses_ (GET)- takes a JSON object with 'routeId'.
+* _/buses_ (GET)- takes a JSON object with 'routeId' and sends back information about the Bus.
 ```
 if 'routeId' == None:
 	returns information of all Buses.
@@ -117,7 +133,8 @@ if 'routeId' != None:
 ```
 * _/buses_ (DELETE)- takes a JSON object with 'routeId' and deletes Bus with that 'routeId' if exists.
 * _/drivers_ (POST)- Post into Driver table.
-* _/drivers_ (GET)- takes a JSON object with 'driverId'.
+* _/drivers_ (PUT)- Update an entry in Driver table.
+* _/drivers_ (GET)- takes a JSON object with 'driverId' and sends back information about the driver.
 ```
 if 'driverId' == None:
 	returns information of all Drivers.
@@ -126,7 +143,6 @@ if 'driverId' != None:
 ```
 * _/drivers_ (DELETE)- takes a JSON object with 'driverId' and deletes Driver with that 'driverId' if exists.
 * _/sos_ - Sos table.
-* _/users_ - Users table.
 
 Example: _http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes_
 
