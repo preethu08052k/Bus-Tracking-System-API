@@ -18,6 +18,7 @@ from resources.busgeofence import BusGeoFence
 from resources.reports import Fleet,Alert
 from resources.busstops import BusStops
 from resources.complaints import Complaints
+from resources.vendors import Vendors
 
 app=Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS']=True
@@ -71,6 +72,7 @@ api.add_resource(BusStops,'/busstops')
 api.add_resource(Fleet,'/reports/fleet')
 api.add_resource(Alert,'/reports/alerts')
 api.add_resource(Complaints,'/complaints')
+api.add_resource(Vendors,'/vendors')
 
 if __name__ == '__main__':
     serve(app,host='0.0.0.0',port=80,threads=100,url_scheme='https')

@@ -1,6 +1,6 @@
 Bus Tracking System API - 1.7
 --------------------------------
-Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/users_,_/alertscontrol_,_/buses_,_/drivers_ for CRUD operations. Updated all endpoints.
+Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/users_,_/alertscontrol_,_/buses_,_/drivers_,_/vendors_ for CRUD operations. Updated all endpoints.
 --------------------------------
 The Rest API has been deployed to AWS.
 
@@ -142,6 +142,16 @@ if 'driverId' != None:
 	returns information of Driver with given 'driverId'.
 ```
 * _/drivers_ (DELETE)- takes a JSON object with 'driverId' and deletes Driver with that 'driverId' if exists.
+* _/vendors_ (POST)- Post into vendors table.
+* _/vendors_ (PUT)- Update an entry in vendors table.
+* _/vendors_ (GET)- takes a JSON object with 'vendorId' and sends back information about the vendors.
+```
+if 'vendorId' == None:
+	returns information of all Vendors.
+if 'vendorId' != None:
+	returns information of Vendor with given 'vendorId'.
+```
+* _/vendors_ (DELETE)- takes a JSON object with 'vendorId' and deletes Vendor with that 'vendorId' if exists.
 * _/sos_ - Sos table.
 
 Example: _http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes_
