@@ -1,10 +1,10 @@
-Bus Tracking System API - 1.7
+Bus Tracking System API - 1.8
 --------------------------------
-Change Log : Using tracker and tracker_latest tables instead of Rawdata and Livedata tables. Storing vendorId in JWT to distinguish between different tenants. Updated _/users_,_/alertscontrol_,_/buses_,_/drivers_,_/vendors_ for CRUD operations. Updated all endpoints.
+Change Log : Changed to remote Database. Deployed the REST API on HEROKU.
 --------------------------------
-The Rest API has been deployed to AWS.
+The Rest API has been deployed on HEROKU.
 
-Link: _ec2-13-233-193-38.ap-south-1.compute.amazonaws.com_
+Link: _https://cbit-bus-tracking.herokuapp.com_
 
 Everybody can use the below endpoints to access the tables in the database.
 
@@ -154,6 +154,6 @@ if 'vendorId' != None:
 * _/vendors_ (DELETE)- takes a JSON object with 'vendorId' and deletes Vendor with that 'vendorId' if exists.
 * _/sos_ - Sos table.
 
-Example: _http://ec2-13-233-193-38.ap-south-1.compute.amazonaws.com/routes_
+Example: _https://cbit-bus-tracking.herokuapp.com/routes_
 
 All the endpoints returns the data as a list of dictionaries in JSON format which can be converted and used in the program directly.
