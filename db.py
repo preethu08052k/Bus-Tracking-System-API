@@ -4,9 +4,9 @@ from datetime import datetime
 from flask import jsonify
 
 def query(querystr,return_json=True):
-    connection=pymysql.connect( host='gpstrackerdb.cgvswcwjh49d.ap-south-1.rds.amazonaws.com',
-                                user='admin',
-                                password='tracker123',
+    connection=pymysql.connect( host='182.18.164.20',
+                                user='app',
+                                password='Passw0rd2019',
                                 db='gpstrackerdb',
                                 cursorclass=pymysql.cursors.DictCursor )
     connection.begin()
